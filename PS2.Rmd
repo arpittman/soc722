@@ -1,0 +1,129 @@
+---
+title: "Week 2 Problem Set 2"
+author: "Amelia Pittman"
+output:
+  html_document:
+    df_print: paged
+---
+I'm starting Problem Set 2; in order to get set up, I'll load a few packages and data frames.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(readr)
+nc <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTm2WZwNBoQdZhMgot7urbtu8eG7tzAq-60ZJsQ_nupykCAcW0OXebVpHksPWyR4x8xJTVQ8KAulAFS/pub?gid=202410847&single=true&output=csv")
+```
+Now I'll take a look at the data:
+```{r}
+glimpse(nc)
+```
+## Exercise 1
+Based on the glimpse above, habit is a character variable and visits is a doubles variable (numbers with decimals). 
+
+## Exercise 2
+To set up this question, I'll create a scatterplot of weeks x weight.
+```{r}
+ggplot(data = nc, aes(x = weeks, y = weight)) + 
+  geom_point() + 
+  labs(x = "Length of pregnancy (weeks)", y = "Birth weight (lbs)", 
+       title = "Pregnancy duration and newborn weight")
+```
+There's a positive/direct relationship between length of pregnancy and newborn weight, which you can tell because as one goes up the other goes up as well.
+
+## Exercise 3
+For this exercise, I'll change the y-axis to reflect maternal weight gain instead of birth weight.
+```{r}
+ggplot(data = nc, aes(x = weeks, y = gained)) + 
+  geom_point() + 
+  labs(x = "Length of pregnancy (weeks)", y = "Maternal weight gain (lbs)", 
+       title = "Pregnancy duration and maternal weight gain")
+```
+
+## Exercise 4
+```{r}
+ggplot(data = nc, aes(x = weeks, y = gained, color = premie))+ 
+  geom_point() + 
+  labs(x = "Pregnancy length (wks)", y = "Maternal weight gain (lbs)")
+```
+(A) Adding the "color=premie" argument changed the color of data points on the plot to reflect the values of the "premie" variable (and added a legend to explain that). 
+
+(B) That means 3 variables are now included on this plot. 
+
+(C) It appears that this variable classifies any baby born at 36 weeks or less to be a premie. 
+
+## Exercise 5
+```{r}
+ggplot(data = nc, aes(x = mage, y = weight, color = gender))+ 
+  geom_point() + 
+  labs(x = "Mother's age (yrs)", y = "Birth weight (lbs)")
+```
+There doesn't appear to be a strong relationship between mother's age and birth weight. I know that because there's no clear way to draw a trend line on the scatterplot above.
+
+## Exercise 6
+```{r}
+ggplot(data = nc, aes(x = weeks))+ 
+  geom_histogram(binwidth = 1, color = "white", fill = "steelblue")
+```
+(A) The "count" refers to the number of observations with a given value of the "weeks" variable.
+
+(B) The average length of pregnancy in weeks appears to be about 39 (it's the tallest bar on the histogram, and is roughly at the center of the distribution). 
+
+(C) If we changed the binwidth to 100, there would be only one bin, and all of the cases would be in it (800 cases total), because the binWIDTH is how much variation each bin captures, and there aren't more than 100 different values of our variable.
+
+## Exercise 7 
+```{r}
+ggplot(data = nc, aes(x = weight))+ 
+  geom_histogram(binwidth = 0.5, color = "white", fill = "steelblue")
+```
+
+## Exercise 8
+```{r}
+ggplot(data = nc, aes(x = weight)) +
+  geom_histogram(binwidth = 0.5, color = "white", fill = "steelblue") +
+  facet_wrap(~ gender, ncol = 1)
+```
+Males appear to have a slightly higher average birth weight than females (the center of their distribution is farther right than females' distribution).
+
+## Exercise 9
+```{r}
+ggplot(data = nc, aes(x = mature, y = gained)) +
+  geom_boxplot(fill = "lightgreen") +
+  labs(x = "Mothers' maternity status", y = "Maternal weight gain (lbs)", 
+       title = "Boxplots of Maternal Weight Gain by Mothers' Maternity Status")
+```
+There is only a very small difference in the median weight gain, but younger moms appear to have gained slightly more weight than mature moms.
+
+## Exercise 10
+```{r}
+ggplot(data = nc, aes(x = habit, y = weeks)) +
+  geom_boxplot(fill = "lightgreen") +
+  labs(x = "Smoking status", y = "Pregnancy length (weeks)", 
+       title = "Boxplots of Pregnancy Length by Smoking Status")
+```
+The duration of pregnancy is more variable for nonsmokers than smokers (the weeks variable is more spread for nonsmokers).
+
+## Exercise 11
+```{r}
+ggplot(data = nc, aes(x = fage))+ 
+  geom_histogram(binwidth = 2, color = "white", fill = "lightgreen") +
+  labs (x = "Father's Age", y = "Count", title = "Histogram of Father's Age")
+```
+Father's age appears to have a right skew.
+
+## Exercise 12
+```{r}
+ggplot(data = nc, aes(x = whitemom, y = weight)) +
+  geom_boxplot(fill = "lightgreen") +
+  labs(x = "Mother's race", y = "Birth weight (lbs)", 
+       title = "Boxplots of Birth Weight by Mother's Race")
+```
+Median birth weight is higher for babies born to white mothers than for babies born to nonwhite mothers in this sample.
+
+## Exercise 13
+```{r}
+ggplot(data = nc, aes(x = mage, y = weeks)) + 
+  geom_point() + 
+  labs(x = "Mother's age (yrs)", y = "Pregnancy Duration (wks)",
+       title = "Pregnancy duration and mother's age")
+```
+As mother's age increases, there is no clear trend in pregnancy duration.
