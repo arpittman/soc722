@@ -1,0 +1,259 @@
+---
+title: "Prob Wkshp 2"
+author: "AP"
+date: "9/14/2021"
+output: html_document
+---
+
+## Question 1
+**Using probability notation, write the conditional statement we wanted to express above (probability that a person speaks Spanish given that they are from South America).**
+$$ P (\text{Spanish} | \text{South American}) $$
+**What about the probability that a person is from South America given that they speak Spanish?**
+$$ P (\text{South American} | \text{Spanish}) $$
+**Which one do you think will be higher?**
+
+I think that the probability of South American given that Spanish will be higher, since Brazilians don't speak Spanish and that would drive the first probability down.
+
+**Write out in probability notation the full conditional probability that someone speaks Spanish given that they are from South America.**
+$$\frac{P (\text{Spanish} \cap \text{South American})}{ P (\text{South American})}$$
+
+
+## Question 2
+First example:
+$$ P (\text{ both girls } | \text{ at least one girl }) $$
+```{r}
+library(DiagrammeR)
+library(tidyverse)
+
+# Create our visualization
+tree <-
+    create_graph() %>% # initiate graph
+    add_n_nodes(
+      n = 7, 
+      type = "path",
+      label = c("START", "B", "G", "B", "G", "B", "G"), # Labels for each node
+      node_aes = node_aes(
+        shape = "circle",
+        height = 1,
+        width = 1,
+        x = c(0, 3, 3, 6, 6, 6, 6), # Just the heights of each node (so it looks like a tree)
+        y = c(0, 2, -2, 3, 1, -3, -1), 
+        fill = c("white", "blue", "green", "blue", "blue", "blue", "green"))) %>% 
+    add_edge(
+      from = 1,
+      to = 2,
+      edge_aes = edge_aes(
+        label = "0.5",
+        color="red"
+      )) %>% 
+  add_edge(
+      from = 1,
+      to = 3,
+      edge_aes = edge_aes(
+        label = "0.5", 
+        color = "red"
+      )) %>% 
+  add_edge(
+      from = 2,
+      to = 4,
+      edge_aes = edge_aes(
+        label = "0.5"
+      )) %>% 
+  add_edge(
+      from = 2,
+      to = 5,
+      edge_aes = edge_aes(
+        label = "0.5",
+        color = "red"
+      )) %>% 
+  add_edge(
+      from = 3,
+      to = 6,
+      edge_aes = edge_aes(
+        label = "0.5",
+        color = "red"
+      )) %>% 
+  add_edge(
+      from = 3,
+      to = 7,
+      edge_aes = edge_aes(
+        label = "0.5",
+        color = "red"
+      )) 
+render_graph(tree)
+```
+So, the probability would be one third, because ONE of the paths has green dots and THREE have red lines.
+
+Second example:
+$$ P (\text{ both girls } | \text{ elder is a girl }) $$
+```{r}
+library(DiagrammeR)
+library(tidyverse)
+
+# Create our visualization
+tree <-
+    create_graph() %>% # initiate graph
+    add_n_nodes(
+      n = 7, 
+      type = "path",
+      label = c("START", "B", "G", "B", "G", "B", "G"), # Labels for each node
+      node_aes = node_aes(
+        shape = "circle",
+        height = 1,
+        width = 1,
+        x = c(0, 3, 3, 6, 6, 6, 6), # Just the heights of each node (so it looks like a tree)
+        y = c(0, 2, -2, 3, 1, -3, -1), 
+        fill = c("white", "blue", "green", "blue", "blue", "blue", "green"))) %>% 
+    add_edge(
+      from = 1,
+      to = 2,
+      edge_aes = edge_aes(
+        label = "0.5"
+      )) %>% 
+  add_edge(
+      from = 1,
+      to = 3,
+      edge_aes = edge_aes(
+        label = "0.5",
+        color = "red"
+      )) %>% 
+  add_edge(
+      from = 2,
+      to = 4,
+      edge_aes = edge_aes(
+        label = "0.5"
+      )) %>% 
+  add_edge(
+      from = 2,
+      to = 5,
+      edge_aes = edge_aes(
+        label = "0.5"
+      )) %>% 
+  add_edge(
+      from = 3,
+      to = 6,
+      edge_aes = edge_aes(
+        label = "0.5",
+        color = "red"
+      )) %>% 
+  add_edge(
+      from = 3,
+      to = 7,
+      edge_aes = edge_aes(
+        label = "0.5",
+        color = "red"
+      )) 
+render_graph(tree)
+```
+
+So, the probability is one half, because ONE of the paths has green dots, and TWO of the paths have red arrows.
+
+## Question 3
+The first term represents the posterior odds, or the odds of A after taking into account B. The third term is the prior odds, which is the odds of A without taking B into account. The second term is an adjustment term called a likelihood ratio, which describes how much more (or less) likely B is to happen with A versus without A. 
+
+## Question 4
+```{r}
+fair_coin <- 1/2
+biased_coin <- 3/4
+heads <- 3
+
+fair_coin^heads * 1/2 / (fair_coin^3 * 1/2 + biased_coin^heads * 1/2)
+```
+Creating a "for" loop...
+```{r}
+for (heads in 4:10) 
+  (print(paste(heads, "heads:",
+    fair_coin^heads * 1/2 / (fair_coin^3 * 1/2 + biased_coin^heads * 1/2))
+    ))
+```
+So, at 5 heads in a row, the probability that we're flipping the fair coin drops to 8.6%; at 7 heads in a row, the probability drops to 3.0%.
+
+If we had seen Tails, Tails, Tails, we could model the probability that we're flipping a fair coin as follows:
+```{r}
+fair_coin2 <- .5
+biased_coin2 <- .25
+tails <- 3
+
+fair_coin2^tails * 1/2 / (fair_coin2^tails * 1/2 + biased_coin2^tails * 1/2)
+```
+So, the probability that we're flipping the fair coin is 88.9% if we see 3 tails in a row.
+
+## Question 5
+Specificity is the "true negative" rate, or the probability that Fred DOESN'T test positive given that he DOESN'T actually have conditionitis.
+
+Sensitivity is the "true positive" rate, or the probability that Fred DOES test positive given that he DOES actually have conditionitis.
+
+```{r}
+accuracy <- .9
+diseaseprob <- .01
+
+(accuracy*diseaseprob)/(accuracy*diseaseprob + (1-accuracy)*(1-diseaseprob))
+```
+
+There's an 8.3% chance that Fred has conditionitis given that he tested positive if the test is only 90% accurate.
+```{r}
+accuracyb <- .95
+diseaseprobb <- .05
+
+(accuracyb*diseaseprobb)/(accuracyb*diseaseprobb + (1-accuracyb)*(1-diseaseprobb))
+```
+There is a 50% chance that Andrea has conditionitis B given that she tested positive.
+
+```{r}
+tree <-
+    create_graph() %>% # initiate graph
+    add_n_nodes(
+      n = 7, 
+      type = "path",
+      label = c("10,000 People", "9,500 People", "500 People", "475 People", "9,025 People", "25 People", "475 People"), # Labels for each node
+      node_aes = node_aes(
+        shape = "circle",
+        height = 1,
+        width = 1,
+        x = c(0, 3, 3, 6, 6, 6, 6), # Just the heights of each node (so it looks like a tree)
+        y = c(0, 2, -2, 3, 1, -3, -1))) %>% 
+    add_edge(
+      from = 1,
+      to = 2,
+      edge_aes = edge_aes(
+        label = "healthy"
+      )) %>% 
+  add_edge(
+      from = 1,
+      to = 3,
+      edge_aes = edge_aes(
+        label = "diseased"
+      )) %>% 
+  add_edge(
+      from = 2,
+      to = 4,
+      edge_aes = edge_aes(
+        label = "test positive"
+      )) %>% 
+  add_edge(
+      from = 2,
+      to = 5,
+      edge_aes = edge_aes(
+        label = "test negative"
+      )) %>% 
+  add_edge(
+      from = 3,
+      to = 6,
+      edge_aes = edge_aes(
+        label = "test negative"
+      )) %>% 
+  add_edge(
+      from = 3,
+      to = 7,
+      edge_aes = edge_aes(
+        label = "test positive"
+      )) 
+render_graph(tree)
+```
+
+## Question 6
+The "prosecutor" observes an earthquake and thinks that the world is ending, because earthquakes are rare and in 99% of the books he's read about the world ending, there's an earthquake. This would be represented as 
+$$ P (\text{earthquake} | \text{apocalypse}) = .99 $$
+However, the relevant probability here is actually...
+$$ P (\text{apocalypse} | \text{earthquake}) $$
+...because the apocalypse happening isn't the given, the earthquake is the given.
